@@ -35,6 +35,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -42,13 +43,19 @@ import cz.msebera.android.httpclient.Header;
 public class MainActivity extends AppCompatActivity implements AMap.OnMapClickListener, AMap.OnCameraChangeListener, GeocodeSearch.OnGeocodeSearchListener {
 
     public static final String URL = "http://caiyunapp.com/fcgi-bin/v1/img.py?token=Y2FpeXVuIGFuZHJpb2QgYXBp";
+    int[] imgs = {R.drawable.index1, R.drawable.index2, R.drawable.index3, R.drawable.index4, R.drawable.index5, R.drawable.index6, R.drawable.index7, R.drawable.index8, R.drawable.index9, R.drawable.index10,
+            R.drawable.index11, R.drawable.index12, R.drawable.index13, R.drawable.index14, R.drawable.index15, R.drawable.index16, R.drawable.index17, R.drawable.index18, R.drawable.index19, R.drawable.index20};
     List<ImgBean> mImgBeans;
     AsyncHttpClient mAsyncHttpClient = new AsyncHttpClient();
     private Marker myLocMarker;
     CameraPosition mCameraPosition;
-    private float mZoomLevel = 5;
+    private float mZoomLevel = 4;
     public AMapLocationClient mLocationClient = null;
     GeocodeSearch mGeocodeSearch;
+    GroundOverlay groundoverlay;
+    List<GroundOverlay> overlays = new ArrayList<>();
+
+    android.os.Handler mHandler = new android.os.Handler();
 
     //声明定位回调监听器
     public AMapLocationListener mLocationListener = new AMapLocationListener() {
@@ -59,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
             mCameraPosition = CameraPosition.fromLatLngZoom(latLng, mZoomLevel);
             CameraUpdate update = CameraUpdateFactory.newCameraPosition(mCameraPosition);
             mAMap.moveCamera(update);
-            Log.d(TAG,aMapLocation.toString());
+            Log.d(TAG, aMapLocation.toString());
             updateMarker(latLng);
         }
     };
@@ -71,9 +78,24 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 mImgBeans = ImgParseUtil.parse(response);
-                Log.d(TAG, String.valueOf(mImgBeans.size()));
+                Log.d(TAG, "size is " + String.valueOf(mImgBeans.size()));
+                play(mImgBeans);
             }
         });
+    }
+
+    private void play(List<ImgBean> imgBeans) {
+        for (int i = 0; i < imgBeans.size(); i++) {
+            ImgBean imgBean = imgBeans.get(i);
+            final LatLngBounds bounds = new LatLngBounds(new LatLng(imgBean.getTop(), imgBean.getLeft()), new LatLng(imgBean.getBottom(), imgBean.getRight()));
+            final int finalI = i;
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+//                    playWav(bounds, imgs[finalI]);
+                }
+            }, 300 * i);
+        }
     }
 
     private static final String TAG = "huli";
@@ -90,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         init();
         mMapView.onCreate(savedInstanceState);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -194,11 +217,15 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         mTextView.setText(loc);
     }
 
-    private void playWav(LatLngBounds bounds) {
-        GroundOverlay groundoverlay = mAMap.addGroundOverlay(new GroundOverlayOptions()
+    private void playWav(LatLngBounds bounds, int resId) {
+        if (groundoverlay!=null && groundoverlay.isVisible()){
+            groundoverlay.remove();
+        }
+        groundoverlay = mAMap.addGroundOverlay(new GroundOverlayOptions()
                 .anchor(0.5f, 0.5f).transparency(0.1f)
-                .image(BitmapDescriptorFactory.fromResource(R.drawable.r1))
+                .image(BitmapDescriptorFactory.fromResource(resId))
                 .positionFromBounds(bounds));
+        Log.d(TAG,bounds.toString());
     }
 
     @Override

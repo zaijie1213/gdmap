@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\car.png",
+        "source": "F:\\loca\\map\\res\\drawable-ldpi\\car.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\end.png",
+        "source": "F:\\loca\\map\\res\\drawable-ldpi\\end.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\bus.png",
+        "source": "F:\\loca\\map\\res\\drawable-ldpi\\bus.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\start.png",
+        "source": "F:\\loca\\map\\res\\drawable-ldpi\\start.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\man.png",
+        "source": "F:\\loca\\map\\res\\drawable-ldpi\\man.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\ic_launcher.png",
+        "source": "F:\\loca\\map\\res\\drawable-ldpi\\ic_launcher.png"
+    }
+]

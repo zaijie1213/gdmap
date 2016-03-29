@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\bus.png",
+        "source": "F:\\loca\\map\\res\\drawable-mdpi\\bus.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\start.png",
+        "source": "F:\\loca\\map\\res\\drawable-mdpi\\start.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\arrow.png",
+        "source": "F:\\loca\\map\\res\\drawable-mdpi\\arrow.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\car.png",
+        "source": "F:\\loca\\map\\res\\drawable-mdpi\\car.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\custom_info_bubble.9.png",
+        "source": "F:\\loca\\map\\res\\drawable-mdpi\\custom_info_bubble.9.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\man.png",
+        "source": "F:\\loca\\map\\res\\drawable-mdpi\\man.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_launcher.png",
+        "source": "F:\\loca\\map\\res\\drawable-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\end.png",
+        "source": "F:\\loca\\map\\res\\drawable-mdpi\\end.png"
+    }
+]

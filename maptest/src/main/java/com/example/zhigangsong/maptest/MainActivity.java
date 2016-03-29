@@ -33,8 +33,6 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -45,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
 
     public static final String URL = "http://caiyunapp.com/fcgi-bin/v1/img.py?token=Y2FpeXVuIGFuZHJpb2QgYXBp";
     List<ImgBean> mImgBeans;
-
     AsyncHttpClient mAsyncHttpClient = new AsyncHttpClient();
     private Marker myLocMarker;
     CameraPosition mCameraPosition;

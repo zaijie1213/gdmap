@@ -1,6 +1,7 @@
 package com.example.zhigangsong.maptest;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +36,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -45,28 +45,24 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     public static final String URL = "http://caiyunapp.com/fcgi-bin/v1/img.py?token=Y2FpeXVuIGFuZHJpb2QgYXBp";
     int[] imgs = {R.drawable.index1, R.drawable.index2, R.drawable.index3, R.drawable.index4, R.drawable.index5, R.drawable.index6, R.drawable.index7, R.drawable.index8, R.drawable.index9, R.drawable.index10,
             R.drawable.index11, R.drawable.index12, R.drawable.index13, R.drawable.index14, R.drawable.index15, R.drawable.index16, R.drawable.index17, R.drawable.index18, R.drawable.index19, R.drawable.index20};
-    List<ImgBean> mImgBeans;
+    List<RadarImage> mRadarImages;
     AsyncHttpClient mAsyncHttpClient = new AsyncHttpClient();
-    private Marker myLocMarker;
+    private Marker mLastMarker;
     CameraPosition mCameraPosition;
-    private float mZoomLevel = 4;
+    private float mZoomLevel = 5;
     public AMapLocationClient mLocationClient = null;
     GeocodeSearch mGeocodeSearch;
-    GroundOverlay groundoverlay;
-    List<GroundOverlay> overlays = new ArrayList<>();
-
-    android.os.Handler mHandler = new android.os.Handler();
+    GroundOverlay mLastGroundOverlay;
+    PlayHandler mPlayHandler = new PlayHandler(this);
 
     //声明定位回调监听器
     public AMapLocationListener mLocationListener = new AMapLocationListener() {
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
-            Log.d(TAG, aMapLocation.toString());
             LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
             mCameraPosition = CameraPosition.fromLatLngZoom(latLng, mZoomLevel);
             CameraUpdate update = CameraUpdateFactory.newCameraPosition(mCameraPosition);
             mAMap.moveCamera(update);
-            Log.d(TAG, aMapLocation.toString());
             updateMarker(latLng);
         }
     };
@@ -77,25 +73,15 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                mImgBeans = ImgParseUtil.parse(response);
-                Log.d(TAG, "size is " + String.valueOf(mImgBeans.size()));
-                play(mImgBeans);
+                mRadarImages = ImgParseUtil.parse(response);
+                play(mRadarImages);
             }
         });
     }
 
-    private void play(List<ImgBean> imgBeans) {
-        for (int i = 0; i < imgBeans.size(); i++) {
-            ImgBean imgBean = imgBeans.get(i);
-            final LatLngBounds bounds = new LatLngBounds(new LatLng(imgBean.getTop(), imgBean.getLeft()), new LatLng(imgBean.getBottom(), imgBean.getRight()));
-            final int finalI = i;
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-//                    playWav(bounds, imgs[finalI]);
-                }
-            }, 300 * i);
-        }
+    private void play(List<RadarImage> radarImages) {
+        RadarPlayer player = new RadarPlayer(radarImages, mPlayHandler);
+        player.play();
     }
 
     private static final String TAG = "huli";
@@ -109,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        init();
+        initMap();
         mMapView.onCreate(savedInstanceState);
     }
 
@@ -144,14 +130,14 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         LatLonPoint point = new LatLonPoint(latLng.latitude, latLng.longitude);
         RegeocodeQuery query = new RegeocodeQuery(point, 0, GeocodeSearch.AMAP);
         mGeocodeSearch.getFromLocationAsyn(query);
-        myLocMarker = mAMap.addMarker(new MarkerOptions().position(latLng).icon(
+        mLastMarker = mAMap.addMarker(new MarkerOptions().position(latLng).icon(
                 BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         getImgs();
     }
 
 
-    private void init() {
+    private void initMap() {
         mMapView = (MapView) findViewById(R.id.map_view);
         if (mMapView != null) {
             mAMap = mMapView.getMap();
@@ -181,8 +167,8 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     }
 
     private void removeMarkers() {
-        if (null != myLocMarker) {
-            myLocMarker.remove();
+        if (null != mLastMarker) {
+            mLastMarker.remove();
         }
     }
 
@@ -198,14 +184,10 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
         mZoomLevel = cameraPosition.zoom;
-        Log.d(TAG, cameraPosition.toString());
     }
 
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-        Log.d(TAG, ":dis " + regeocodeResult.getRegeocodeAddress().getDistrict());
-        Log.d(TAG, ":pois " + regeocodeResult.getRegeocodeAddress().getPois().toString());
-        Log.d(TAG, ":addr " + regeocodeResult.getRegeocodeAddress().getFormatAddress());
         List<PoiItem> poiItems = regeocodeResult.getRegeocodeAddress().getPois();
         StringBuilder loc = new StringBuilder();
         loc.append(regeocodeResult.getRegeocodeAddress().getDistrict()).append(" ");
@@ -218,14 +200,13 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     }
 
     private void playWav(LatLngBounds bounds, int resId) {
-        if (groundoverlay!=null && groundoverlay.isVisible()){
-            groundoverlay.remove();
+        if (mLastGroundOverlay != null) {
+            mLastGroundOverlay.remove();
         }
-        groundoverlay = mAMap.addGroundOverlay(new GroundOverlayOptions()
+        mLastGroundOverlay = mAMap.addGroundOverlay(new GroundOverlayOptions()
                 .anchor(0.5f, 0.5f).transparency(0.1f)
                 .image(BitmapDescriptorFactory.fromResource(resId))
                 .positionFromBounds(bounds));
-        Log.d(TAG,bounds.toString());
     }
 
     @Override
@@ -240,4 +221,33 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     public void radio(View view) {
         Toast.makeText(this, "雷达", Toast.LENGTH_SHORT).show();
     }
+
+    static class PlayHandler extends NoLeakHandler<MainActivity> {
+        public PlayHandler(MainActivity outClass) {
+            super(outClass);
+        }
+
+        @Override
+        public void handleMessage(Message msg, MainActivity mainActivity) {
+            if (null != mainActivity) {
+                switch (msg.what) {
+                    case RadarPlayer.MSG_PLAY:
+                        RadarImage image = (RadarImage) msg.obj;
+                        mainActivity.playWav(image.getLatLngBounds(), mainActivity.imgs[msg.arg1]);
+                        break;
+                    case RadarPlayer.MSG_STOP:
+                        mainActivity.stopPLay();
+                        break;
+                }
+            }
+        }
+    }
+
+    private void stopPLay() {
+        Log.d(TAG, "stop");
+        if (mLastGroundOverlay != null) {
+            mLastGroundOverlay.remove();
+        }
+    }
+
 }

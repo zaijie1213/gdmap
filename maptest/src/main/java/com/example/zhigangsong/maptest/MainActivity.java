@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     };
 
 
-    private void getImgs() {
+    private void requestImgs() {
         mAsyncHttpClient.get(URL, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -83,7 +83,11 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     }
 
     private void play(List<RadarImage> radarImages) {
-        mPlayer = new RadarPlayer(radarImages, mPlayHandler);
+        if (mPlayer == null) {
+            mPlayer = new RadarPlayer(radarImages, mPlayHandler);
+        } else {
+            mPlayer.resetRaderImgs(radarImages);
+        }
         mPlayer.start();
         mControlBtn.setText("pause");
     }
@@ -108,6 +112,9 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         super.onResume();
         mMapView.onResume();
         requestLocation();
+        if (null != mPlayer) {
+            mPlayer.resume();
+        }
     }
 
     @Override
@@ -138,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         mLastMarker = mAMap.addMarker(new MarkerOptions().position(latLng).icon(
                 BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-        getImgs();
+        requestImgs();
     }
 
 
@@ -222,10 +229,12 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
 
     public void user(View view) {
         Toast.makeText(this, "用户反馈", Toast.LENGTH_SHORT).show();
+        mPlayer.clear();
     }
 
     public void radio(View view) {
         Toast.makeText(this, "雷达", Toast.LENGTH_SHORT).show();
+        mPlayer.start();
     }
 
     public void pause(View view) {
@@ -257,15 +266,16 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
                         mainActivity.playWav(image.getLatLngBounds(), mainActivity.imgs[msg.arg1]);
                         break;
                     case RadarPlayer.MSG_STOP:
-                        mainActivity.stopPLay();
+                        mainActivity.clearRadioImg();
                         break;
                 }
             }
         }
     }
 
-    private void stopPLay() {
+    private void clearRadioImg() {
         if (mLastGroundOverlay != null) {
+            mLastGroundOverlay.setVisible(false);
             mLastGroundOverlay.remove();
         }
     }

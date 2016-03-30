@@ -7,7 +7,6 @@ import android.util.Log;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Created by zhigang.song on 2016/3/30.
@@ -15,9 +14,8 @@ import java.util.concurrent.ScheduledExecutorService;
 public class RadarPlayer {
     public static final int MSG_PLAY = 1;
     public static final int MSG_STOP = 2;
-    public static final int MSG_PAUSE = 3;
-    public static final int MSG_RESUME = 4;
     private static final String TAG = "huli";
+    public static final int INTERVAL = 200;
     private boolean isPlay = true;
     private List<RadarImage> mRadarImages;
     Handler mHandler;
@@ -40,16 +38,12 @@ public class RadarPlayer {
     }
 
     public void start() {
-//        this.clearLast();
-        mLastThread = new AnimateThread(0);
-        mExecutor.execute(mLastThread);
-    }
-
-    private void clearLast() {
-        mHandler.removeMessages(MSG_PLAY);
+        this.isPlay = true;
         if (mLastThread != null) {
             mLastThread.stopSelf();
         }
+        mLastThread = new AnimateThread(0);
+        mExecutor.execute(mLastThread);
     }
 
     public void pause() {
@@ -63,8 +57,16 @@ public class RadarPlayer {
     }
 
     public void stop() {
+        mHandler.removeMessages(MSG_PLAY);
         this.isPlay = false;
         this.lastPlayIndex = 0;
+    }
+
+    public void clear() {
+        this.stop();
+        Message message = Message.obtain();
+        message.what = MSG_STOP;
+        mHandler.sendMessage(message);
     }
 
     public void destory() {
@@ -90,23 +92,27 @@ public class RadarPlayer {
         @Override
         public void run() {
             Log.d(TAG, Thread.currentThread().getName());
-            while (RadarPlayer.this.isPlay) {
+            while (this.isPlay && RadarPlayer.this.isPlay) {
                 for (int i = startIndex; i < mRadarImages.size(); i++) {
-                    if (RadarPlayer.this.isPlay) {
+                    if (this.isPlay && RadarPlayer.this.isPlay) {
                         RadarImage radarImage = mRadarImages.get(i);
                         Message message = Message.obtain();
                         message.obj = radarImage;
                         message.what = MSG_PLAY;
                         message.arg1 = i;
                         lastPlayIndex = i;
-                        Log.e(TAG,"index is "+ i);
                         mHandler.sendMessage(message);
                         try {
-                            Thread.sleep(200);
+                            Thread.sleep(INTERVAL);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
+                }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
                 startIndex = 0;
             }

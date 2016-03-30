@@ -37,6 +37,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         } else {
             mPlayer.resetRaderImgs(radarImages);
         }
-        mPlayer.start();
+        mPlayer.initImg();
         mControlBtn.setText("pause");
     }
 
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         requestLocation();
         if (null != mPlayer) {
             mPlayer.resume();
+            mPlayer.initImg();
         }
     }
 
@@ -212,14 +214,15 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         mTextView.setText(loc);
     }
 
-    private void playWav(LatLngBounds bounds, int resId) {
+    private void playWav(LatLngBounds bounds, File path) {
         if (mLastGroundOverlay != null) {
             mLastGroundOverlay.remove();
         }
         mLastGroundOverlay = mAMap.addGroundOverlay(new GroundOverlayOptions()
                 .anchor(0.5f, 0.5f).transparency(0.1f)
-                .image(BitmapDescriptorFactory.fromResource(resId))
+                .image(BitmapDescriptorFactory.fromPath(path))
                 .positionFromBounds(bounds));
+        Log.d(TAG,path);
     }
 
     @Override
@@ -263,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
                 switch (msg.what) {
                     case RadarPlayer.MSG_PLAY:
                         RadarImage image = (RadarImage) msg.obj;
-                        mainActivity.playWav(image.getLatLngBounds(), mainActivity.imgs[msg.arg1]);
+                        mainActivity.playWav(image.getLatLngBounds(), image.getPath());
                         break;
                     case RadarPlayer.MSG_STOP:
                         mainActivity.clearRadioImg();

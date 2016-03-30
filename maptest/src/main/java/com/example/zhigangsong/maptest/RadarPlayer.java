@@ -1,9 +1,15 @@
 package com.example.zhigangsong.maptest;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,8 +39,36 @@ public class RadarPlayer {
     public void clearRadarImgs() {
     }
 
+    public void initImg() {
+        final int[] loadCount = {0};
+        for (int i = 0; i < mRadarImages.size(); i++) {
+            final int finalI = i;
+            ImageLoader.getInstance().loadImage(mRadarImages.get(i).getImgUrl(), new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    super.onLoadingComplete(imageUri, view, loadedImage);
+                    mRadarImages.get(finalI).setIsCached(true);
+                    Log.d(TAG, mRadarImages.get(finalI).getImgUrl());
+                    loadCount[0]++;
+                    if (loadCount[0] == mRadarImages.size()) {
+                        Log.d(TAG, "load success");
+                        RadarPlayer.this.testImg();
+                    }
+                }
+            });
+        }
+    }
+
     public void resetRaderImgs(List<RadarImage> radarImages) {
         this.mRadarImages = radarImages;
+    }
+
+    private void testImg() {
+        for (RadarImage radarImage : mRadarImages) {
+            File file = ImageLoader.getInstance().getDiskCache().get(radarImage.getImgUrl());
+            radarImage.setPath(file);
+        }
+        this.start();
     }
 
     public void start() {
@@ -109,13 +143,11 @@ public class RadarPlayer {
                         }
                     }
                 }
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
                 startIndex = 0;
             }
         }
     }
+
+
 }

@@ -5,6 +5,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     GeocodeSearch mGeocodeSearch;
     GroundOverlay mLastGroundOverlay;
     PlayHandler mPlayHandler = new PlayHandler(this);
+    RadarPlayer mPlayer;
+    Button mControlBtn;
 
     //声明定位回调监听器
     public AMapLocationListener mLocationListener = new AMapLocationListener() {
@@ -80,8 +83,9 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     }
 
     private void play(List<RadarImage> radarImages) {
-        RadarPlayer player = new RadarPlayer(radarImages, mPlayHandler);
-        player.play();
+        mPlayer = new RadarPlayer(radarImages, mPlayHandler);
+        mPlayer.start();
+        mControlBtn.setText("pause");
     }
 
     private static final String TAG = "huli";
@@ -117,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         super.onPause();
         mMapView.onPause();
         mLocationClient.onDestroy();
+        mPlayer.pause();
     }
 
     @Override
@@ -147,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
             mAMap.setOnCameraChangeListener(this);
         }
         mTextView = (TextView) findViewById(R.id.loc_info);
+        mControlBtn = (Button) findViewById(R.id.play);
         mGeocodeSearch = new GeocodeSearch(this);
         mGeocodeSearch.setOnGeocodeSearchListener(this);
     }
@@ -222,6 +228,21 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         Toast.makeText(this, "雷达", Toast.LENGTH_SHORT).show();
     }
 
+    public void pause(View view) {
+        if (mPlayer.isPlay()) {
+            mPlayer.pause();
+            mControlBtn.setText("start");
+        } else {
+            mPlayer.resume();
+            mControlBtn.setText("pause");
+        }
+    }
+
+    public void resume(View view) {
+        mPlayer.resume();
+        Log.d(TAG, "player resume");
+    }
+
     static class PlayHandler extends NoLeakHandler<MainActivity> {
         public PlayHandler(MainActivity outClass) {
             super(outClass);
@@ -244,7 +265,6 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     }
 
     private void stopPLay() {
-        Log.d(TAG, "stop");
         if (mLastGroundOverlay != null) {
             mLastGroundOverlay.remove();
         }

@@ -28,12 +28,12 @@
         "source": "F:\\loca\\map\\res\\layout\\busline_dialog.xml"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\share_activity.xml",
-        "source": "F:\\loca\\map\\res\\layout\\share_activity.xml"
-    },
-    {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\feature.xml",
         "source": "F:\\loca\\map\\res\\layout\\feature.xml"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\share_activity.xml",
+        "source": "F:\\loca\\map\\res\\layout\\share_activity.xml"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\location.xml",
@@ -84,12 +84,12 @@
         "source": "F:\\loca\\map\\res\\layout\\item_bus_segment_ex.xml"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\photo_layout.xml",
-        "source": "F:\\loca\\map\\res\\layout\\photo_layout.xml"
-    },
-    {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\cloud_detail_activity.xml",
         "source": "F:\\loca\\map\\res\\layout\\cloud_detail_activity.xml"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\photo_layout.xml",
+        "source": "F:\\loca\\map\\res\\layout\\photo_layout.xml"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\ui_settings_activity.xml",
@@ -100,20 +100,20 @@
         "source": "F:\\loca\\map\\res\\layout\\tileoverlay_activity.xml"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\events_activity.xml",
-        "source": "F:\\loca\\map\\res\\layout\\events_activity.xml"
-    },
-    {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\preview_photo_activity.xml",
         "source": "F:\\loca\\map\\res\\layout\\preview_photo_activity.xml"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\subpoisearch_activity.xml",
-        "source": "F:\\loca\\map\\res\\layout\\subpoisearch_activity.xml"
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\events_activity.xml",
+        "source": "F:\\loca\\map\\res\\layout\\events_activity.xml"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\item_layout.xml",
         "source": "F:\\loca\\map\\res\\layout\\item_layout.xml"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\subpoisearch_activity.xml",
+        "source": "F:\\loca\\map\\res\\layout\\subpoisearch_activity.xml"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\item_bus_result.xml",
@@ -124,12 +124,12 @@
         "source": "F:\\loca\\map\\res\\layout\\poi_result_list.xml"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\worldmap_activity.xml",
-        "source": "F:\\loca\\map\\res\\layout\\worldmap_activity.xml"
-    },
-    {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\activity_route_detail.xml",
         "source": "F:\\loca\\map\\res\\layout\\activity_route_detail.xml"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\worldmap_activity.xml",
+        "source": "F:\\loca\\map\\res\\layout\\worldmap_activity.xml"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\weather_activity.xml",
@@ -148,12 +148,12 @@
         "source": "F:\\loca\\map\\res\\layout\\layers_activity.xml"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\gridview_item.xml",
-        "source": "F:\\loca\\map\\res\\layout\\gridview_item.xml"
-    },
-    {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\listview_item.xml",
         "source": "F:\\loca\\map\\res\\layout\\listview_item.xml"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\gridview_item.xml",
+        "source": "F:\\loca\\map\\res\\layout\\gridview_item.xml"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\locationsensorsource_activity.xml",
@@ -200,12 +200,12 @@
         "source": "F:\\loca\\map\\res\\layout\\poikeywordsearch_activity.xml"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\locationnetwork_activity.xml",
-        "source": "F:\\loca\\map\\res\\layout\\locationnetwork_activity.xml"
-    },
-    {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\navsearch_list_poi.xml",
         "source": "F:\\loca\\map\\res\\layout\\navsearch_list_poi.xml"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\locationnetwork_activity.xml",
+        "source": "F:\\loca\\map\\res\\layout\\locationnetwork_activity.xml"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\expandablelistviewselector.xml",
@@ -216,11 +216,11 @@
         "source": "F:\\loca\\map\\res\\layout\\main_activity.xml"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\route_inputs.xml",
-        "source": "F:\\loca\\map\\res\\layout\\route_inputs.xml"
-    },
-    {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\marker_activity.xml",
         "source": "F:\\loca\\map\\res\\layout\\marker_activity.xml"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\layout\\route_inputs.xml",
+        "source": "F:\\loca\\map\\res\\layout\\route_inputs.xml"
     }
 ]

@@ -1,83 +1,59 @@
 package com.example.zhigangsong.maptest;
 
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.View;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.amap.api.maps2d.model.LatLng;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * Created by zhigang.song on 2016/3/30.
+ * RadarImgPlay control
  */
 public class RadarPlayer {
     public static final int MSG_PLAY = 1;
     public static final int MSG_STOP = 2;
     private static final String TAG = "huli";
-    public static final int INTERVAL = 200;
+    public static final int INTERVAL = 140;
     private boolean isPlay = true;
-    private List<RadarImage> mRadarImages;
+    private List<RadarImageEntity> mRadarImageEntities = new ArrayList<>();
     Handler mHandler;
     private int lastPlayIndex = 0;
 
     private ExecutorService mExecutor;
     private AnimateThread mLastThread;
+    private RadarImgData mRadarImgData;
 
-    public RadarPlayer(List<RadarImage> radarImages, Handler handler) {
-        this.mRadarImages = radarImages;
+    public RadarPlayer(Handler handler) {
         this.mHandler = handler;
         mExecutor = Executors.newSingleThreadExecutor();
+        mRadarImgData = new RadarImgData();
     }
 
-    public void clearRadarImgs() {
+    public void clearRadarImages() {
+        this.mRadarImageEntities.clear();
     }
 
-    public void initImg() {
-        final int[] loadCount = {0};
-        for (int i = 0; i < mRadarImages.size(); i++) {
-            final int finalI = i;
-            ImageLoader.getInstance().loadImage(mRadarImages.get(i).getImgUrl(), new SimpleImageLoadingListener() {
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    super.onLoadingComplete(imageUri, view, loadedImage);
-                    mRadarImages.get(finalI).setIsCached(true);
-                    Log.d(TAG, mRadarImages.get(finalI).getImgUrl());
-                    loadCount[0]++;
-                    if (loadCount[0] == mRadarImages.size()) {
-                        Log.d(TAG, "load success");
-                        RadarPlayer.this.testImg();
-                    }
-                }
-            });
-        }
-    }
 
-    public void resetRaderImgs(List<RadarImage> radarImages) {
-        this.mRadarImages = radarImages;
-    }
-
-    private void testImg() {
-        for (RadarImage radarImage : mRadarImages) {
-            File file = ImageLoader.getInstance().getDiskCache().get(radarImage.getImgUrl());
-            radarImage.setPath(file);
-        }
+    private void resetRaderImages(List<RadarImageEntity> radarImageEntities) {
+        this.mRadarImageEntities = radarImageEntities;
         this.start();
     }
 
+
     public void start() {
-        this.isPlay = true;
-        if (mLastThread != null) {
-            mLastThread.stopSelf();
+        if (mRadarImageEntities != null && mRadarImageEntities.size() > 0) {
+            this.isPlay = true;
+            if (mLastThread != null) {
+                mLastThread.stopSelf();
+            }
+            mLastThread = new AnimateThread(0);
+            mExecutor.execute(mLastThread);
         }
-        mLastThread = new AnimateThread(0);
-        mExecutor.execute(mLastThread);
     }
 
     public void pause() {
@@ -91,24 +67,39 @@ public class RadarPlayer {
     }
 
     public void stop() {
-        mHandler.removeMessages(MSG_PLAY);
+        mHandler.removeMessages(MSG_STOP);
         this.isPlay = false;
         this.lastPlayIndex = 0;
-    }
-
-    public void clear() {
-        this.stop();
         Message message = Message.obtain();
         message.what = MSG_STOP;
         mHandler.sendMessage(message);
     }
 
+
     public void destory() {
+        isPlay = false;
+        if (mLastThread != null) {
+            mLastThread.stopSelf();
+        }
         mExecutor.shutdown();
     }
 
     public boolean isPlay() {
         return isPlay;
+    }
+
+    public void changPosition(LatLng target, float zoom) {
+        mRadarImgData.requestImages(target, zoom, new RadarImgData.LoadImgListener() {
+            @Override
+            public void onSuccess(List<RadarImageEntity> radarImageEntities) {
+                RadarPlayer.this.resetRaderImages(radarImageEntities);
+            }
+
+            @Override
+            public void onFail(String reason) {
+
+            }
+        });
     }
 
     private class AnimateThread extends Thread {
@@ -125,13 +116,12 @@ public class RadarPlayer {
 
         @Override
         public void run() {
-            Log.d(TAG, Thread.currentThread().getName());
             while (this.isPlay && RadarPlayer.this.isPlay) {
-                for (int i = startIndex; i < mRadarImages.size(); i++) {
+                for (int i = startIndex; i < mRadarImageEntities.size(); i++) {
                     if (this.isPlay && RadarPlayer.this.isPlay) {
-                        RadarImage radarImage = mRadarImages.get(i);
+                        RadarImageEntity radarImageEntity = mRadarImageEntities.get(i);
                         Message message = Message.obtain();
-                        message.obj = radarImage;
+                        message.obj = radarImageEntity;
                         message.what = MSG_PLAY;
                         message.arg1 = i;
                         lastPlayIndex = i;
@@ -143,7 +133,11 @@ public class RadarPlayer {
                         }
                     }
                 }
-
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 startIndex = 0;
             }
         }

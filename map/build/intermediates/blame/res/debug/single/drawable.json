@@ -8,12 +8,12 @@
         "source": "F:\\loca\\map\\res\\drawable\\point.png"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\mode_driving.xml",
-        "source": "F:\\loca\\map\\res\\drawable\\mode_driving.xml"
-    },
-    {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\btn_default_small_pressed.9.png",
         "source": "F:\\loca\\map\\res\\drawable\\btn_default_small_pressed.9.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\mode_driving.xml",
+        "source": "F:\\loca\\map\\res\\drawable\\mode_driving.xml"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\mode_transit.xml",
@@ -28,12 +28,12 @@
         "source": "F:\\loca\\map\\res\\drawable\\btn_default_small.xml"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\mode_driving_on.9.png",
-        "source": "F:\\loca\\map\\res\\drawable\\mode_driving_on.9.png"
-    },
-    {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\whiteborder.xml",
         "source": "F:\\loca\\map\\res\\drawable\\whiteborder.xml"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\mode_driving_on.9.png",
+        "source": "F:\\loca\\map\\res\\drawable\\mode_driving_on.9.png"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\next.png",
@@ -64,16 +64,16 @@
         "source": "F:\\loca\\map\\res\\drawable\\mode_transit_off.9.png"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\mode_driving_focused.9.png",
-        "source": "F:\\loca\\map\\res\\drawable\\mode_driving_focused.9.png"
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\btn_map_poi.xml",
+        "source": "F:\\loca\\map\\res\\drawable\\btn_map_poi.xml"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\left_back.9.png",
         "source": "F:\\loca\\map\\res\\drawable\\left_back.9.png"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\btn_map_poi.xml",
-        "source": "F:\\loca\\map\\res\\drawable\\btn_map_poi.xml"
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\mode_driving_focused.9.png",
+        "source": "F:\\loca\\map\\res\\drawable\\mode_driving_focused.9.png"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\btn_nav_drag_down_pressed.png",
@@ -104,12 +104,12 @@
         "source": "F:\\loca\\map\\res\\drawable\\mode_walk_on.9.png"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\btn_default_small_normal_disable.9.png",
-        "source": "F:\\loca\\map\\res\\drawable\\btn_default_small_normal_disable.9.png"
-    },
-    {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\mode_walk_off.9.png",
         "source": "F:\\loca\\map\\res\\drawable\\mode_walk_off.9.png"
+    },
+    {
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\btn_default_small_normal_disable.9.png",
+        "source": "F:\\loca\\map\\res\\drawable\\btn_default_small_normal_disable.9.png"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\btn_nav_drag_down_normal.png",
@@ -128,16 +128,16 @@
         "source": "F:\\loca\\map\\res\\drawable\\mode_transit_focused.9.png"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\next_disable.png",
-        "source": "F:\\loca\\map\\res\\drawable\\next_disable.png"
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\btn_route_next.xml",
+        "source": "F:\\loca\\map\\res\\drawable\\btn_route_next.xml"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\text_search_selected.9.png",
         "source": "F:\\loca\\map\\res\\drawable\\text_search_selected.9.png"
     },
     {
-        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\btn_route_next.xml",
-        "source": "F:\\loca\\map\\res\\drawable\\btn_route_next.xml"
+        "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\next_disable.png",
+        "source": "F:\\loca\\map\\res\\drawable\\next_disable.png"
     },
     {
         "merged": "F:\\loca\\map\\build\\intermediates\\res\\merged\\debug\\drawable\\btn_poi_search_normal.png",

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +24,6 @@ import com.amap.api.maps2d.model.CameraPosition;
 import com.amap.api.maps2d.model.GroundOverlay;
 import com.amap.api.maps2d.model.GroundOverlayOptions;
 import com.amap.api.maps2d.model.LatLng;
-import com.amap.api.maps2d.model.LatLngBounds;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.services.core.LatLonPoint;
@@ -32,23 +32,14 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONObject;
-
-import java.io.File;
+import java.util.Calendar;
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity implements AMap.OnMapClickListener, AMap.OnCameraChangeListener, GeocodeSearch.OnGeocodeSearchListener {
 
-    public static final String URL = "http://caiyunapp.com/fcgi-bin/v1/img.py?token=Y2FpeXVuIGFuZHJpb2QgYXBp";
-    int[] imgs = {R.drawable.index1, R.drawable.index2, R.drawable.index3, R.drawable.index4, R.drawable.index5, R.drawable.index6, R.drawable.index7, R.drawable.index8, R.drawable.index9, R.drawable.index10,
-            R.drawable.index11, R.drawable.index12, R.drawable.index13, R.drawable.index14, R.drawable.index15, R.drawable.index16, R.drawable.index17, R.drawable.index18, R.drawable.index19, R.drawable.index20};
-    List<RadarImage> mRadarImages;
-    AsyncHttpClient mAsyncHttpClient = new AsyncHttpClient();
+
+
     private Marker mLastMarker;
     CameraPosition mCameraPosition;
     private float mZoomLevel = 5;
@@ -58,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     PlayHandler mPlayHandler = new PlayHandler(this);
     RadarPlayer mPlayer;
     Button mControlBtn;
+
 
     //声明定位回调监听器
     public AMapLocationListener mLocationListener = new AMapLocationListener() {
@@ -72,25 +64,9 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     };
 
 
-    private void requestImgs() {
-        mAsyncHttpClient.get(URL, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                mRadarImages = ImgParseUtil.parse(response);
-                play(mRadarImages);
-            }
-        });
-    }
-
-    private void play(List<RadarImage> radarImages) {
-        if (mPlayer == null) {
-            mPlayer = new RadarPlayer(radarImages, mPlayHandler);
-        } else {
-            mPlayer.resetRaderImgs(radarImages);
-        }
-        mPlayer.initImg();
-        mControlBtn.setText("pause");
+    private void notifyPlayerPositionChanged() {
+        CameraPosition position = mAMap.getCameraPosition();
+        mPlayer.changPosition(position.target, position.zoom);
     }
 
     private static final String TAG = "huli";
@@ -98,14 +74,17 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     AMap mAMap;
 
     UiSettings mUiSettings;
-    TextView mTextView;
+    TextView mTimeLine;
+    TextView mLoc;
+    ImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initMap();
+        initView();
         mMapView.onCreate(savedInstanceState);
+        mPlayer = new RadarPlayer(mPlayHandler);
     }
 
     @Override
@@ -115,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         requestLocation();
         if (null != mPlayer) {
             mPlayer.resume();
-            mPlayer.initImg();
         }
     }
 
@@ -123,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        mPlayer.destory();
     }
 
     @Override
@@ -130,7 +109,9 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         super.onPause();
         mMapView.onPause();
         mLocationClient.onDestroy();
-        mPlayer.pause();
+        if (mPlayer != null) {
+            mPlayer.pause();
+        }
     }
 
     @Override
@@ -147,29 +128,34 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         mLastMarker = mAMap.addMarker(new MarkerOptions().position(latLng).icon(
                 BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-        requestImgs();
+        notifyPlayerPositionChanged();
     }
 
 
-    private void initMap() {
+    private void initView() {
         mMapView = (MapView) findViewById(R.id.map_view);
-        if (mMapView != null) {
-            mAMap = mMapView.getMap();
-            mUiSettings = mAMap.getUiSettings();
-            mUiSettings.setZoomControlsEnabled(false);
-            mAMap.setOnMapClickListener(this);
-            mAMap.setOnCameraChangeListener(this);
-        }
-        mTextView = (TextView) findViewById(R.id.loc_info);
+        mLoc = (TextView) findViewById(R.id.loc_info);
         mControlBtn = (Button) findViewById(R.id.play);
         mGeocodeSearch = new GeocodeSearch(this);
         mGeocodeSearch.setOnGeocodeSearchListener(this);
+        mImageView = (ImageView) findViewById(R.id.img);
+        mTimeLine = (TextView) findViewById(R.id.time_line);
+        initMap();
+    }
+
+    private void initMap() {
+        mAMap = mMapView.getMap();
+        mUiSettings = mAMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(false);
+        mAMap.setOnMapClickListener(this);
+        mAMap.setOnCameraChangeListener(this);
     }
 
     private void requestLocation() {
         mLocationClient = new AMapLocationClient(getApplicationContext());
         AMapLocationClientOption option = new AMapLocationClientOption();
         option.setOnceLocation(true);
+        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         mLocationClient.setLocationOption(option);
         mLocationClient.setLocationListener(mLocationListener);
         mLocationClient.startLocation();
@@ -199,6 +185,8 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
         mZoomLevel = cameraPosition.zoom;
+        notifyPlayerPositionChanged();
+        Log.d(TAG,mAMap.getProjection().getVisibleRegion().latLngBounds.toString());
     }
 
     @Override
@@ -211,18 +199,21 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         } else {
             loc.append(regeocodeResult.getRegeocodeAddress().getFormatAddress());
         }
-        mTextView.setText(loc);
+        Log.d(TAG,loc.toString());
+        mLoc.setText(loc);
     }
 
-    private void playWav(LatLngBounds bounds, File path) {
+    private void playWav(RadarImageEntity image) {
         if (mLastGroundOverlay != null) {
             mLastGroundOverlay.remove();
         }
         mLastGroundOverlay = mAMap.addGroundOverlay(new GroundOverlayOptions()
                 .anchor(0.5f, 0.5f).transparency(0.1f)
-                .image(BitmapDescriptorFactory.fromPath(path))
-                .positionFromBounds(bounds));
-        Log.d(TAG,path);
+                .image(BitmapDescriptorFactory.fromPath(image.getCachePath()))
+                .positionFromBounds(image.getArea()));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis((long) (image.getTime() * 1000));
+        mTimeLine.setText(calendar.get(Calendar.HOUR_OF_DAY) + " : " + calendar.get(Calendar.MINUTE));
     }
 
     @Override
@@ -232,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
 
     public void user(View view) {
         Toast.makeText(this, "用户反馈", Toast.LENGTH_SHORT).show();
-        mPlayer.clear();
+        mPlayer.stop();
     }
 
     public void radio(View view) {
@@ -241,6 +232,9 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     }
 
     public void pause(View view) {
+        if (null == mPlayer) {
+            return;
+        }
         if (mPlayer.isPlay()) {
             mPlayer.pause();
             mControlBtn.setText("start");
@@ -248,11 +242,6 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
             mPlayer.resume();
             mControlBtn.setText("pause");
         }
-    }
-
-    public void resume(View view) {
-        mPlayer.resume();
-        Log.d(TAG, "player resume");
     }
 
     static class PlayHandler extends NoLeakHandler<MainActivity> {
@@ -265,8 +254,8 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
             if (null != mainActivity) {
                 switch (msg.what) {
                     case RadarPlayer.MSG_PLAY:
-                        RadarImage image = (RadarImage) msg.obj;
-                        mainActivity.playWav(image.getLatLngBounds(), image.getPath());
+                        RadarImageEntity image = (RadarImageEntity) msg.obj;
+                        mainActivity.playWav(image);
                         break;
                     case RadarPlayer.MSG_STOP:
                         mainActivity.clearRadioImg();

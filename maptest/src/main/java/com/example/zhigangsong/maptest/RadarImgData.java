@@ -1,6 +1,7 @@
 package com.example.zhigangsong.maptest;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 
 import com.amap.api.maps2d.model.LatLng;
@@ -9,6 +10,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
@@ -26,7 +28,9 @@ import cz.msebera.android.httpclient.Header;
  */
 public class RadarImgData {
     private AsyncHttpClient mAsyncHttpClient;
-    private List<RadarImageEntity> mImageEntities = new ArrayList<>(); ;
+    private List<RadarImageEntity> mImageEntities = new ArrayList<>();
+
+
 
     public static final String COUNTRY_URL = "http://caiyunapp.com/fcgi-bin/v1/img.py?token=Y2FpeXVuIGFuZHJpb2QgYXBp";
     public static final String SITE_URL = "http://caiyunapp.com/fcgi-bin/v1/api.py?lonlat=%s,%s&format=json&product=minutes_prec&token=Y2FpeXVuIGFuZHJpb2QgYXBp";
@@ -37,6 +41,9 @@ public class RadarImgData {
         List<RadarImageEntity> radarImageEntities = new ArrayList<>();
         if (jsonObject.optString("status").equals("ok")) {
             JSONArray array = jsonObject.optJSONArray("radar_img");
+            if (null == array) {
+                return radarImageEntities;
+            }
             for (int i = 0; i < array.length(); i++) {
                 try {
                     JSONArray array1 = array.getJSONArray(i);
@@ -62,7 +69,9 @@ public class RadarImgData {
         } else {
             url = String.format(SITE_URL, latLng.longitude, latLng.latitude);
         }
+        Log.d("huli", url);
         mAsyncHttpClient.get(url, new JsonHttpResponseHandler() {
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -88,6 +97,7 @@ public class RadarImgData {
     }
 
     public void cacheImg(final LoadImgListener listener) {
+
         final int[] loadCount = {0};
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true)
@@ -99,7 +109,18 @@ public class RadarImgData {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     super.onLoadingComplete(imageUri, view, loadedImage);
-                    mImageEntities.get(finalI).setIsCached(true);
+                    if (mImageEntities.size() > finalI) {
+                        mImageEntities.get(finalI).setIsCached(true);
+                        loadCount[0]++;
+                        if (loadCount[0] == mImageEntities.size()) {
+                            RadarImgData.this.saveImgPath(listener);
+                        }
+                    }
+                }
+
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                    super.onLoadingFailed(imageUri, view, failReason);
                     loadCount[0]++;
                     if (loadCount[0] == mImageEntities.size()) {
                         RadarImgData.this.saveImgPath(listener);
@@ -108,6 +129,7 @@ public class RadarImgData {
             });
         }
     }
+
     public interface LoadImgListener {
         void onSuccess(List<RadarImageEntity> radarImageEntities);
 

@@ -1,1 +1,1 @@
-include ':app', ':map', ':maptest'
+include ':app', ':map', ':maptest', ':mjlibrary'

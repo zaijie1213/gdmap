@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="ProgressView">
+        <attr name="max" format="integer"/>
+        <attr name="timeTextSize" format="dimension"/>
+        <attr name="timeTextColor" format="color|reference"/>
+    </declare-styleable>
+</resources>

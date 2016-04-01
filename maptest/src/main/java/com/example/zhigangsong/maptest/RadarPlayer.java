@@ -2,6 +2,7 @@ package com.example.zhigangsong.maptest;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.amap.api.maps2d.model.LatLng;
 
@@ -58,18 +59,20 @@ public class RadarPlayer {
 
     public void pause() {
         this.isPlay = false;
+        if (null != mLastThread) {
+            mLastThread.stopSelf();
+        }
     }
 
     public void resume() {
+        Log.d(TAG, "player resume from index " + lastPlayIndex);
         this.isPlay = true;
         mLastThread = new AnimateThread(lastPlayIndex);
         mExecutor.execute(mLastThread);
     }
 
     public void stop() {
-        mHandler.removeMessages(MSG_STOP);
         this.isPlay = false;
-        this.lastPlayIndex = 0;
         Message message = Message.obtain();
         message.what = MSG_STOP;
         mHandler.sendMessage(message);
@@ -89,15 +92,17 @@ public class RadarPlayer {
     }
 
     public void changPosition(LatLng target, float zoom) {
+        Log.d(TAG, "player start cache img");
         mRadarImgData.requestImages(target, zoom, new RadarImgData.LoadImgListener() {
             @Override
             public void onSuccess(List<RadarImageEntity> radarImageEntities) {
                 RadarPlayer.this.resetRaderImages(radarImageEntities);
+                Log.d(TAG, "cache img success");
             }
 
             @Override
             public void onFail(String reason) {
-
+                Log.d(TAG, "cache img fail");
             }
         });
     }
@@ -111,19 +116,21 @@ public class RadarPlayer {
         }
 
         public AnimateThread(int startIndex) {
+            Log.d(TAG, "player init from  index " + startIndex);
             this.startIndex = startIndex;
         }
 
         @Override
         public void run() {
+            Log.d(TAG, "start play from " + startIndex);
             while (this.isPlay && RadarPlayer.this.isPlay) {
                 for (int i = startIndex; i < mRadarImageEntities.size(); i++) {
                     if (this.isPlay && RadarPlayer.this.isPlay) {
+                        Log.d(TAG, "player play index " + i);
                         RadarImageEntity radarImageEntity = mRadarImageEntities.get(i);
                         Message message = Message.obtain();
                         message.obj = radarImageEntity;
                         message.what = MSG_PLAY;
-                        message.arg1 = i;
                         lastPlayIndex = i;
                         mHandler.sendMessage(message);
                         try {
@@ -131,14 +138,16 @@ public class RadarPlayer {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        return;
                     }
                 }
+                startIndex = 0;
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                startIndex = 0;
             }
         }
     }

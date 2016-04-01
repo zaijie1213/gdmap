@@ -92,9 +92,9 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         super.onResume();
         mMapView.onResume();
         requestLocation();
-        if (null != mPlayer) {
-            mPlayer.resume();
-        }
+//        if (null != mPlayer) {
+//            mPlayer.resume();
+//        }
     }
 
     @Override

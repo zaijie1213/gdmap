@@ -1,11 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'android'
+            keyPassword 'android'
+            storeFile file('F:/loca/keystore/debug.keystore')
+            storePassword 'android'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
     defaultConfig {
-        applicationId "com.example.zhigangsong.maptest"
+//        applicationId "com.example.zhigangsong.maptest"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
@@ -17,7 +24,6 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
-
     buildTypes {
         release {
             minifyEnabled true

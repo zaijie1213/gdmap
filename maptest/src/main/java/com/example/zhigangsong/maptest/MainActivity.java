@@ -38,11 +38,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AMap.OnMapClickListener, AMap.OnCameraChangeListener, GeocodeSearch.OnGeocodeSearchListener {
 
-
-
     private Marker mLastMarker;
     CameraPosition mCameraPosition;
-    private float mZoomLevel = 5;
+    private static float mZoomLevel = 5;
     public AMapLocationClient mLocationClient = null;
     GeocodeSearch mGeocodeSearch;
     GroundOverlay mLastGroundOverlay;
@@ -59,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
             mCameraPosition = CameraPosition.fromLatLngZoom(latLng, mZoomLevel);
             CameraUpdate update = CameraUpdateFactory.newCameraPosition(mCameraPosition);
             mAMap.moveCamera(update);
+            Log.i(TAG,"myloc is " + latLng.toString());
             updateMarker(latLng);
         }
     };
@@ -91,10 +90,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     protected void onResume() {
         super.onResume();
         mMapView.onResume();
-        requestLocation();
-//        if (null != mPlayer) {
-//            mPlayer.resume();
-//        }
+        requestMyLocation();
     }
 
     @Override
@@ -151,11 +147,11 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
         mAMap.setOnCameraChangeListener(this);
     }
 
-    private void requestLocation() {
+    private void requestMyLocation() {
+        Log.i(TAG, "start request location");
         mLocationClient = new AMapLocationClient(getApplicationContext());
         AMapLocationClientOption option = new AMapLocationClientOption();
-        option.setOnceLocation(true);
-        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        option.setOnceLocation(true).setLocationMode(AMapLocationClientOption.AMapLocationMode.Device_Sensors).setMockEnable(true);
         mLocationClient.setLocationOption(option);
         mLocationClient.setLocationListener(mLocationListener);
         mLocationClient.startLocation();
@@ -174,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     }
 
     public void getMyLoc(View view) {
-        requestLocation();
+        requestMyLocation();
     }
 
     @Override

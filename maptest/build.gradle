@@ -1,14 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        config {
-            keyAlias 'android'
-            keyPassword 'android'
-            storeFile file('F:/loca/keystore/debug.keystore')
-            storePassword 'android'
-        }
-    }
+
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
     defaultConfig {
@@ -30,6 +23,9 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dexOptions {
+        javaMaxHeapSize "10g" //specify the heap size for the dex process
     }
 }
 

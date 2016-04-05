@@ -83,7 +83,7 @@ public class GdMapView extends FrameLayout implements View.OnClickListener, AMap
                 mCameraPosition = CameraPosition.fromLatLngZoom(latLng, mZoomLevel);
                 CameraUpdate update = CameraUpdateFactory.newCameraPosition(mCameraPosition);
                 mMap.moveCamera(update);
-                Log.e(TAG, "my location is: " + latLng.toString());
+                Log.e("11", "my location is : " + latLng.toString());
                 updateLocation(latLng);
             }
         };

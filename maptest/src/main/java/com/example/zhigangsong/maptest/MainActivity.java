@@ -47,10 +47,29 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     PlayHandler mPlayHandler = new PlayHandler(this);
     RadarPlayer mPlayer;
     Button mControlBtn;
+    private static final String TAG = "huli";
+    MapView mMapView;
+    AMap mAMap;
 
+    UiSettings mUiSettings;
+    TextView mTimeLine;
+    TextView mLoc;
+    ImageView mImageView;
+
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();
+        mMapView.onCreate(savedInstanceState);
+        mPlayer = new RadarPlayer(mPlayHandler);
+    }
 
     //声明定位回调监听器
-    public AMapLocationListener mLocationListener = new AMapLocationListener() {
+    private AMapLocationListener mLocationListener = new AMapLocationListener() {
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
             LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
@@ -66,24 +85,6 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapClickLi
     private void notifyPlayerPositionChanged() {
         CameraPosition position = mAMap.getCameraPosition();
         mPlayer.changPosition(position.target, position.zoom);
-    }
-
-    private static final String TAG = "huli";
-    MapView mMapView;
-    AMap mAMap;
-
-    UiSettings mUiSettings;
-    TextView mTimeLine;
-    TextView mLoc;
-    ImageView mImageView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initView();
-        mMapView.onCreate(savedInstanceState);
-        mPlayer = new RadarPlayer(mPlayHandler);
     }
 
     @Override

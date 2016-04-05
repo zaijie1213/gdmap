@@ -71,7 +71,6 @@ public class RadarImgData {
         }
         Log.d("huli", url);
         mAsyncHttpClient.get(url, new JsonHttpResponseHandler() {
-
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -92,8 +91,8 @@ public class RadarImgData {
                 File file = ImageLoader.getInstance().getDiskCache().get(radarImageEntity.getUrl());
                 radarImageEntity.setCachePath(file.getPath());
             }
-            listener.onSuccess(mImageEntities);
         }
+        listener.onSuccess(mImageEntities);
     }
 
     public void cacheImg(final LoadImgListener listener) {

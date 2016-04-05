@@ -71,7 +71,7 @@ public class RadarPlayer {
         mExecutor.execute(mLastThread);
     }
 
-    public void stop() {
+    public void hide() {
         this.isPlay = false;
         Message message = Message.obtain();
         message.what = MSG_STOP;
@@ -116,17 +116,17 @@ public class RadarPlayer {
         }
 
         public AnimateThread(int startIndex) {
-            Log.d(TAG, "player init from  index " + startIndex);
+//            Log.d(TAG, "player init from  index " + startIndex);
             this.startIndex = startIndex;
         }
 
         @Override
         public void run() {
-            Log.d(TAG, "start play from " + startIndex);
+//            Log.d(TAG, "start play from " + startIndex);
             while (this.isPlay && RadarPlayer.this.isPlay) {
                 for (int i = startIndex; i < mRadarImageEntities.size(); i++) {
                     if (this.isPlay && RadarPlayer.this.isPlay) {
-                        Log.d(TAG, "player play index " + i);
+//                        Log.d(TAG, "player play index " + i);
                         RadarImageEntity radarImageEntity = mRadarImageEntities.get(i);
                         Message message = Message.obtain();
                         message.obj = radarImageEntity;

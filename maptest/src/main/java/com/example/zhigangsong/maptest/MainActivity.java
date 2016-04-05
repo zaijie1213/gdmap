@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity  {
 //
 //    public void user(View view) {
 //        Toast.makeText(this, "用户反馈", Toast.LENGTH_SHORT).show();
-//        mPlayer.stop();
+//        mPlayer.hide();
 //    }
 //
 //    public void radio(View view) {

@@ -28,12 +28,14 @@ import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by zhigang.song on 2016/4/5.
@@ -95,8 +97,15 @@ public class GdMapView extends FrameLayout implements View.OnClickListener, AMap
                 Log.d(TAG, regeocodeResult.getRegeocodeAddress().getFormatAddress());
                 LatLonPoint point = regeocodeResult.getRegeocodeQuery().getPoint();
                 LatLng latLng = new LatLng(point.getLatitude(), point.getLongitude());
-                String pos = regeocodeResult.getRegeocodeAddress().getFormatAddress();
-                updateMarker(latLng, pos);
+                List<PoiItem> poiItems = regeocodeResult.getRegeocodeAddress().getPois();
+                StringBuilder loc = new StringBuilder();
+                loc.append(regeocodeResult.getRegeocodeAddress().getDistrict()).append(" ");
+                if (!poiItems.isEmpty()) {
+                    loc.append(poiItems.get(0).getTitle());
+                } else {
+                    loc.append(regeocodeResult.getRegeocodeAddress().getFormatAddress());
+                }
+                updateMarker(latLng, loc.toString());
             }
 
             @Override
@@ -155,7 +164,6 @@ public class GdMapView extends FrameLayout implements View.OnClickListener, AMap
     public void onCreate(Bundle bundle) {
         initView(ctx);
         initData();
-        Log.i(TAG, "map oncreate");
         mMapView.onCreate(bundle);
     }
 
@@ -185,11 +193,11 @@ public class GdMapView extends FrameLayout implements View.OnClickListener, AMap
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.play_control:
-                if (mPlayer.isPlay()){
+                if (mPlayer.isPlay()) {
                     pausePlay();
-                }else {
+                } else {
                     resumePlay();
                 }
                 break;
@@ -248,7 +256,10 @@ public class GdMapView extends FrameLayout implements View.OnClickListener, AMap
     }
 
     private void clearRadioImg() {
-
+        if (mLastGroundOverlay != null) {
+            mLastGroundOverlay.setVisible(false);
+            mLastGroundOverlay.remove();
+        }
     }
 
 

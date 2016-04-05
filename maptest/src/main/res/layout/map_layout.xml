@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-
     tools:showIn="@layout/activity_main"
+    tools:ignore="RtlHardcoded,HardcodedText"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
@@ -23,7 +22,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:background="@android:color/holo_green_light"
-        android:onClick="user"/>
+        />
 
     <ImageButton
         android:layout_width="30dp"
@@ -33,7 +32,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/holo_red_light"
-        android:onClick="radio"/>
+/>
 
     <ImageButton
         android:layout_width="30dp"
@@ -43,18 +42,17 @@
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
         android:background="@android:color/black"
-        android:onClick="getMyLoc"
         />
 
     <Button
-        android:id="@+id/play"
+        android:id="@+id/play_control"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
-        android:onClick="pause"
-        android:text="pause"/>
+        android:text="pause"
+/>
 
     <TextView
         android:textSize="20sp"
@@ -64,7 +62,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:text="10"
-        android:layout_toRightOf="@+id/play"
+        android:layout_toRightOf="@+id/play_control"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

@@ -6,6 +6,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -275,4 +276,21 @@ public class GdMapView extends FrameLayout implements View.OnClickListener, AMap
         calendar.setTimeInMillis((long) (image.getTime() * 1000));
         mTimeLine.setText(calendar.get(Calendar.HOUR_OF_DAY) + " : " + calendar.get(Calendar.MINUTE));
     }
+
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        return super.onTouchEvent(event);
+//    }
+//
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent ev) {
+//        if (ev.getAction()== MotionEvent.ACTION_DOWN){
+//            return true;
+//        }else {
+//            return super.onInterceptTouchEvent(ev);
+//        }
+//        boolean inter = super.onInterceptTouchEvent(ev);
+//        Log.e(TAG, ev.toString() + String.valueOf(inter));
+//        return inter;
+//    }
 }
